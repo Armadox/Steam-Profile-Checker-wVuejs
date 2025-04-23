@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import HelloWorld from "./components/HelloWorld.vue";
-import TheWelcome from "./components/TheWelcome.vue";
+import ProfileChecker from "./components/ProfileChecker.vue";
 </script>
 
-<template></template>
+<template>
+  <main class="p-6 max-w-xl mx-auto">
+    <p>wait what</p>
+    <ProfileChecker />
+  </main>
+</template>
 
 <script setup></script>
