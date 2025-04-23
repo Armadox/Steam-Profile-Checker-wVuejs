@@ -18,17 +18,9 @@ const fetchProfile = async () => {
 
   try {
     const response = await fetch(
-      `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${apiKey}&steamids=${steamId}`
+      `/api/steam-profile?steamid=${steamId.value}&apiKey=${apiKey.value}`
     );
-
     const data = await response.json();
-    const player = data.response.players[0];
-
-    if (!player) {
-      error.value = "No profile found.";
-      return;
-    }
-
     console.log(data);
   } catch (err) {
     error.value = "Error fetching profile.";
