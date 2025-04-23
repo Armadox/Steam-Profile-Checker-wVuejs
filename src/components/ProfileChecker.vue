@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
-interface UserProfileProps {}
 
 const steamId = ref("");
-const apiKey = ref("");
 const profile = ref<any>(null);
 const error = ref<string | null>(null);
 
 const fetchProfile = async () => {
-  if (!steamId.value || !apiKey.value) {
-    error.value = "Steam ID and API Key are required.";
+  if (!steamId.value) {
+    error.value = "Steam ID is required.";
     return;
   }
 
@@ -18,42 +16,96 @@ const fetchProfile = async () => {
 
   try {
     const response = await fetch(
-      `/api/steam-profile?steamid=${steamId.value}&apiKey=${apiKey.value}`
+      `https://98847074-d0fb-4237-8707-52c81943b6ba-00-1uojmfhsmuty0.worf.replit.dev/steam-profile?steamid=${steamId.value}`
     );
     const data = await response.json();
-    console.log(data);
+    profile.value = data.response.players[0];
+    console.log(profile.value);
   } catch (err) {
     error.value = "Error fetching profile.";
     console.error(err);
   }
 };
-//defineProps<UserProfile>();
 </script>
 
 <template>
-  <h1 class="text-2xl font-bold mb-4">Steam Profile Checker</h1>
-
-  <input
-    v-model="apiKey"
-    placeholder="Enter Steam API Key"
-    class="border rounded px-3 py-2 w-full mb-2"
-  />
-
-  <input
-    v-model="steamId"
-    @keyup.enter="fetchProfile"
-    placeholder="Enter Steam ID"
-    class="border rounded px-3 py-2 w-full mb-4"
-  />
-
-  <button
-    @click="fetchProfile"
-    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+  <div
+    v-if="!profile"
+    style="max-width: 500px; margin: 2rem auto; text-align: center"
   >
-    Check Profile
-  </button>
+    <h1 style="font-size: 1.75rem; font-weight: bold; margin-bottom: 1rem">
+      Steam Profile Checker
+    </h1>
 
-  <div v-if="error" class="text-red-500 mt-4">{{ error }}</div>
+    <input
+      v-model="steamId"
+      @keyup.enter="fetchProfile"
+      placeholder="Enter Steam ID"
+      style="
+        padding: 0.5rem;
+        min-width: 300px;
+        margin-bottom: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        display: block; /* Make sure input is block-level */
+        margin-left: auto;
+        margin-right: auto;
+      "
+    />
 
-  <div v-if="profile" class="mt-6 border p-4 rounded shadow"></div>
+    <button
+      @click="fetchProfile"
+      style="
+        color: #2563eb;
+        padding: 0.5rem 1rem;
+        border: 1px solid #2563eb;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 1rem;
+        background-color: transparent;
+        display: block; /* Ensure button is below the input */
+        margin-left: auto;
+        margin-right: auto;
+      "
+    >
+      Check Profile
+    </button>
+  </div>
+
+  <div v-if="error" style="color: red; margin-top: 1rem; text-align: center">
+    {{ error }}
+  </div>
+
+  <div v-if="profile" style="width: 100%; text-align: center">
+    <h2 style="font-size: 1.75rem; font-weight: 600; margin-bottom: 1rem">
+      {{ profile.personaname }}
+    </h2>
+    <img
+      :src="profile.avatarfull"
+      alt="Player Avatar"
+      style="
+        width: 220px;
+        height: 220px;
+        border-radius: 20%;
+        margin-bottom: 1rem;
+        border: 2px solid #2563eb;
+      "
+    />
+    <p style="color: #555; margin-bottom: 0.1rem; font-size: 1.5rem">
+      {{ profile.realname || "N/A" }}
+    </p>
+    <p style="margin-bottom: 2rem; font-size: 0.75rem">
+      <strong>Last Time Online:</strong>
+      {{ new Date(profile.lastlogoff * 1000).toLocaleString() }}
+    </p>
+    <p>
+      <a
+        :href="profile.profileurl"
+        target="_blank"
+        style="color: #2563eb; text-decoration: none"
+      >
+        View Steam Profile
+      </a>
+    </p>
+  </div>
 </template>
