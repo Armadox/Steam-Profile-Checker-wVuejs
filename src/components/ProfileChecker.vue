@@ -63,7 +63,7 @@ const fetchProfile = async () => {
     >
       You can get your Steam ID from
       <a
-        href="https://steamdb.info"
+        href="https://steamdb.info/calculator/"
         target="_blank"
         style="color: #2563eb; text-decoration: none"
       >
