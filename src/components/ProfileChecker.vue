@@ -18,7 +18,7 @@ const fetchProfile = async () => {
 
   try {
     const response = await fetch(
-      `https://98847074-d0fb-4237-8707-52c81943b6ba-00-1uojmfhsmuty0.worf.replit.dev/steam-profile?steamid=${steamId.value}`
+      `https://steam-proxy.onrender.com/steam-profile?steamid=${steamId.value}`
     );
     const data = await response.json();
     profile.value = data.response.players[0];
